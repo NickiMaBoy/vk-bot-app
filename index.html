@@ -5,23 +5,25 @@
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; }
-        button { padding: 15px 30px; margin: 10px; font-size: 16px; cursor: pointer; }
+        .card { border: 1px solid #ccc; padding: 20px; border-radius: 10px; margin: 10px; }
     </style>
 </head>
 <body>
-    <h2 id="name">Загрузка...</h2>
-    <div id="menu">
-        <button onclick="alert('💰 Баланс: 0')">👤  Профиль</button>
-        <button onclick="alert('Задания скоро появятся!')">💰 Заработать</button>
-    </div>
+    <h2>Личный кабинет</h2>
+    <div class="card" id="user-info">Загрузка данных...</div>
 
     <script>
         vkBridge.send('VKWebAppInit');
-        
-        // Получаем имя пользователя
-        vkBridge.send('VKWebAppGetUserInfo').then((user) => {
-            document.getElementById('name').innerText = "Привет, " + user.first_name + "!";
-        });
+
+        // Читаем user_id из ссылки (например: app123?user_id=456)
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+
+        if (userId) {
+            document.getElementById('user-info').innerText = "Твой ID в системе: " + userId;
+        } else {
+            document.getElementById('user-info').innerText = "Ошибка: ID пользователя не найден.";
+        }
     </script>
 </body>
 </html>
