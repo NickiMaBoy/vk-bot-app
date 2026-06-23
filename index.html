@@ -13,17 +13,15 @@
     <div class="card" id="user-info">Загрузка данных...</div>
 
     <script>
+        // Инициализация моста
         vkBridge.send('VKWebAppInit');
 
-        // Читаем user_id из ссылки (например: app123?user_id=456)
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('user_id');
-
-        if (userId) {
-            document.getElementById('user-info').innerText = "Твой ID в системе: " + userId;
-        } else {
-            document.getElementById('user-info').innerText = "Ошибка: ID пользователя не найден.";
-        }
+        // Получаем данные о пользователе напрямую от платформы ВК
+        vkBridge.send('VKWebAppGetUserInfo').then((data) => {
+            document.getElementById('user-info').innerText = "Твой ID в системе: " + data.id;
+        }).catch((error) => {
+            document.getElementById('user-info').innerText = "Ошибка получения данных: " + error.error_data.error_reason;
+        });
     </script>
 </body>
 </html>
