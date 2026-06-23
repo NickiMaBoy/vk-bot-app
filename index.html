@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 </head>
 <body>
-    <h2>Загрузка...</h2>
+    <h2 id="status">Загрузка...</h2>
+    
     <script>
-        vkBridge.send('VKWebAppGetAuthToken', {app_id: 54649157, scope: 'likes'}).then((data) => {
-            // Здесь токен автоматически передается в твой бот
-            window.location.href = "https://tvoysite.com/save_token?token=" + data.access_token;
+        const status = document.getElementById('status');
+
+        // 1. Инициализируем мост
+        vkBridge.send('VKWebAppInit');
+
+        // 2. Получаем данные пользователя, чтобы знать, кому начислить баллы
+        vkBridge.send('VKWebAppGetUserInfo').then((user) => {
+            status.innerText = "Авторизация... Привет, " + user.first_name;
+            
+            // 3. Теперь запрашиваем токен
+            return vkBridge.send('VKWebAppGetAuthToken', {
+                app_id: 54649157, 
+                scope: 'friends' // или нужные тебе права
+            });
+        }).then((data) => {
+            // 4. Отправляем токен и ID пользователя в твоего бота через сообщение
+            // Бот будет слушать такие сообщения и сохранять их в БД
+            status.innerText = "Успех! Перенаправляю...";
+            
+            // ВАЖНО: Мы не можем отправить сообщение боту напрямую из браузера (это небезопасно)
+            // Поэтому мы делаем Redirect на специальную команду в сообщениях сообщества
+            window.location.href = "https://vk.com/im?sel=-239776091&text=set_token:" + data.access_token;
+        }).catch((error) => {
+            status.innerText = "Ошибка: " + JSON.stringify(error);
+            console.error(error);
         });
     </script>
 </body>
