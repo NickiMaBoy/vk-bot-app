@@ -5,25 +5,14 @@
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 </head>
 <body>
-    <h2 id="status">Загрузка...</h2>
-    
+    <h2>Авторизация...</h2>
     <script>
-        const status = document.getElementById('status');
         vkBridge.send('VKWebAppInit');
 
-        vkBridge.send('VKWebAppGetAuthToken', {
-            app_id: 54649157, 
-            scope: 'friends'
-        }).then((data) => {
-            // ВМЕСТО ПЕРЕНАПРАВЛЕНИЯ — показываем токен пользователю
-            status.innerHTML = `
-                <p>✅ Авторизация успешна!</p>
-                <p>Скопируй этот текст и отправь боту:</p>
-                <textarea readonly style="width:90%; height:50px;">set_token:${data.access_token}</textarea>
-                <p>После отправки бот тебя активирует.</p>
-            `;
-        }).catch((error) => {
-            status.innerText = "Ошибка авторизации: " + error.error_data.error_reason;
+        // Получаем ID пользователя и сразу перекидываем его обратно в бота
+        vkBridge.send('VKWebAppGetUserInfo').then((user) => {
+            // Переход обратно в диалог с ботом с командой "auth" и ID пользователя
+            window.location.href = "https://vk.com/im?sel=-239776091&text=auth_" + user.id;
         });
     </script>
 </body>
