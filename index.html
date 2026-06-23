@@ -6,24 +6,25 @@
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f0f2f5; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px; }
-        button { background: #2787f5; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: 20px auto; max-width: 300px; }
+        .balance-box { font-size: 24px; font-weight: bold; color: #2787f5; margin: 15px 0; }
+        button { background: #2787f5; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h2>Личный кабинет</h2>
-    <div class="card" id="user-info">Загрузка данных профиля...</div>
+    <div class="card">
+        <h2>Личный кабинет</h2>
+        <div id="user-info">Загрузка данных...</div>
+        <div class="balance-box" id="balance-info">Баланс: 0 баллов</div>
+        <button onclick="alert('Задание: Подпишись на группу')">💰 Выполнить задание</button>
+    </div>
 
     <script>
-        // Инициализируем мост
         vkBridge.send('VKWebAppInit');
 
-        // Получаем данные пользователя
         vkBridge.send('VKWebAppGetUserInfo').then((data) => {
-            document.getElementById('user-info').innerHTML = 
-                `Привет, <b>${data.first_name}</b>!<br>Твой ID: ${data.id}`;
-        }).catch((error) => {
-            document.getElementById('user-info').innerText = "Не удалось получить данные.";
+            document.getElementById('user-info').innerHTML = `Привет, <b>${data.first_name}</b>!`;
+            // Здесь мы позже добавим запрос к main.py для получения реального баланса из БД
         });
     </script>
 </body>
