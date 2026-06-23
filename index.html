@@ -3,20 +3,24 @@
 <head>
     <meta charset="utf-8">
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        button { padding: 15px 30px; margin: 10px; font-size: 16px; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <h2 id="status">Авторизация...</h2>
+    <h2 id="name">Загрузка...</h2>
+    <div id="menu">
+        <button onclick="alert('💰 Баланс: 0')">👤  Профиль</button>
+        <button onclick="alert('Задания скоро появятся!')">💰 Заработать</button>
+    </div>
+
     <script>
         vkBridge.send('VKWebAppInit');
-
-        // Просто получаем информацию, чтобы ВК «понял», что пользователь активен
+        
+        // Получаем имя пользователя
         vkBridge.send('VKWebAppGetUserInfo').then((user) => {
-            document.getElementById('status').innerText = "✅ Авторизация успешна! Можете вернуться в диалог с ботом.";
-            
-            // Закрываем приложение, чтобы не висел "замкнутый круг"
-            setTimeout(() => {
-                vkBridge.send('VKWebAppClose', { status: 'success' });
-            }, 2000);
+            document.getElementById('name').innerText = "Привет, " + user.first_name + "!";
         });
     </script>
 </body>
