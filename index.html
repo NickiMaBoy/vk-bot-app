@@ -5,14 +5,18 @@
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 </head>
 <body>
-    <h2>Авторизация...</h2>
+    <h2 id="status">Авторизация...</h2>
     <script>
         vkBridge.send('VKWebAppInit');
 
-        // Получаем ID пользователя и сразу перекидываем его обратно в бота
+        // Просто получаем информацию, чтобы ВК «понял», что пользователь активен
         vkBridge.send('VKWebAppGetUserInfo').then((user) => {
-            // Переход обратно в диалог с ботом с командой "auth" и ID пользователя
-            window.location.href = "https://vk.com/im?sel=-239776091&text=auth_" + user.id;
+            document.getElementById('status').innerText = "✅ Авторизация успешна! Можете вернуться в диалог с ботом.";
+            
+            // Закрываем приложение, чтобы не висел "замкнутый круг"
+            setTimeout(() => {
+                vkBridge.send('VKWebAppClose', { status: 'success' });
+            }, 2000);
         });
     </script>
 </body>
