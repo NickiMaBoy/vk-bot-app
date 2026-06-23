@@ -2,25 +2,28 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { border: 1px solid #ccc; padding: 20px; border-radius: 10px; margin: 10px; }
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f0f2f5; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px; }
+        button { background: #2787f5; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h2>Личный кабинет</h2>
-    <div class="card" id="user-info">Загрузка данных...</div>
+    <div class="card" id="user-info">Загрузка данных профиля...</div>
 
     <script>
-        // Инициализация моста
+        // Инициализируем мост
         vkBridge.send('VKWebAppInit');
 
-        // Получаем данные о пользователе напрямую от платформы ВК
+        // Получаем данные пользователя
         vkBridge.send('VKWebAppGetUserInfo').then((data) => {
-            document.getElementById('user-info').innerText = "Твой ID в системе: " + data.id;
+            document.getElementById('user-info').innerHTML = 
+                `Привет, <b>${data.first_name}</b>!<br>Твой ID: ${data.id}`;
         }).catch((error) => {
-            document.getElementById('user-info').innerText = "Ошибка получения данных: " + error.error_data.error_reason;
+            document.getElementById('user-info').innerText = "Не удалось получить данные.";
         });
     </script>
 </body>
